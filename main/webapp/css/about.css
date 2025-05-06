@@ -1,0 +1,115 @@
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f9f9fb;
+    color: #333;
+  }
+  
+  .about-section {
+    max-width: 1200px;
+    margin: auto;
+    padding: 40px 20px;
+    text-align: center;
+  }
+  
+  .tag {
+    background-color: #eef;
+    color: #333;
+    font-weight: bold;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    display: inline-block;
+    margin-bottom: 10px;
+  }
+  
+  .heading {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+  }
+  
+  .subheading {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 25px;
+  }
+  
+  .buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+  }
+  
+  .btn {
+    padding: 10px 20px;
+    background-color: #eee;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.3s;
+  }
+  
+  .btn.primary {
+    background-color: #6366f1;
+    color: white;
+  }
+  
+  .btn:hover {
+    opacity: 0.85;
+  }
+  
+  .team-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 25px;
+  }
+  
+  .team-card {
+    background-color: white;
+    border-radius: 14px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    overflow: hidden;
+    width: 260px;
+    text-align: left;
+    transition: transform 0.3s ease;
+  }
+  
+  .team-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .team-card img {
+    width: 100%;
+    height: 260px;
+    object-fit: cover;
+  }
+  
+  .info {
+    padding: 16px;
+  }
+  
+  .info h3 {
+    margin: 0;
+    font-size: 1.2rem;
+  }
+  
+  .role {
+    color: #6366f1;
+    font-weight: 500;
+    margin: 4px 0;
+  }
+  
+  .icons {
+    margin-top: 10px;
+    color: #888;
+  }
+  
+  .icons i {
+    margin-right: 10px;
+    cursor: pointer;
+  }
+  

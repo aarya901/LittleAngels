@@ -1,0 +1,18 @@
+@charset "UTF-8";
+
+/* Footer */
+footer {
+    background-color: #ffe9e3;
+    padding: 2rem;
+    text-align: center;
+}
+
+.cta-footer-button {
+    margin-top: 1rem;
+    padding: 0.5rem 1.5rem;
+    background-color: #ff6f61;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
