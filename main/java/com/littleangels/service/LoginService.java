@@ -41,63 +41,40 @@ public class LoginService {
 	 * @return A UserModel object with user data if login is successful, null
 	 *         otherwise.
 	 */
-	public UserModel loginUser(UserModel userModel) {
-		// Return null if connection failed
+	public UserModel loginUser(UserModel userModel) throws SQLException {
+		// Throw exception if connection failed
 		if (isConnectionError) {
-			System.out.println("Connection Error!");
-			return null;
+			throw new SQLException("Database connection failed.");
 		}
 
-		// SQL query to fetch user info based on username
 		String sql = "SELECT user_id, user_name, user_password, user_role FROM user WHERE user_name = ?";
 
 		try (PreparedStatement ps = dbConn.prepareStatement(sql)) {
-			// Set the username parameter in the query
 			ps.setString(1, userModel.getUserName().trim());
-
-			// Execute the query and get result set
 			ResultSet rs = ps.executeQuery();
 
 			if (rs.next()) {
-				// Retrieve and trim values from the result set
-				String dbUsername = rs.getString("user_name");
-				if (dbUsername != null)
-					dbUsername = dbUsername.trim();
-
-				String dbPassword = rs.getString("user_password");
-				if (dbPassword != null)
-					dbPassword = dbPassword.trim();
-
-				String dbRoleRaw = rs.getString("user_role");
-				String dbRole = (dbRoleRaw != null) ? dbRoleRaw.trim() : "";
-
+				String dbUsername = rs.getString("user_name").trim();
+				String dbPassword = rs.getString("user_password").trim();
+				String dbRole = rs.getString("user_role").trim();
 				int dbUserId = rs.getInt("user_id");
 
-				// Decrypt password from database using username as key
 				String decrypted = PasswordUtil.decrypt(dbPassword, dbUsername);
-				if (decrypted == null) {
-					System.out.println("Password decryption failed.");
+				if (decrypted == null)
 					return null;
-				}
 
-				// Compare input credentials with database values
 				if (dbUsername.equalsIgnoreCase(userModel.getUserName().trim())
 						&& decrypted.equals(userModel.getPassword().trim())) {
 
-					// If match found, populate and return a new UserModel
 					UserModel loggedIn = new UserModel();
 					loggedIn.setUserId(dbUserId);
 					loggedIn.setUserName(dbUsername);
-					loggedIn.setRole(dbRole); // Set role from DB, not from form
-
+					loggedIn.setRole(dbRole);
 					return loggedIn;
 				}
 			}
-		} catch (SQLException e) {
-			e.printStackTrace(); // Log SQL exceptions
 		}
-
-		// Return null if login fails
 		return null;
 	}
+
 }

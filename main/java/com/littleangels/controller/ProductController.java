@@ -81,18 +81,31 @@ public class ProductController extends HttpServlet {
 	 */
 	private void listProducts(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		List<ProductModel> products = new ArrayList<>();
-		String sql = "SELECT product_id, product_name, price, product_image FROM product";
+		String query = request.getParameter("query"); // Search input from URL
+		String sql;
+		PreparedStatement ps;
 
-		try (Connection conn = DbConfig.getDbConnection();
-				PreparedStatement ps = conn.prepareStatement(sql);
-				ResultSet rs = ps.executeQuery()) {
+		try (Connection conn = DbConfig.getDbConnection()) {
+			if (query != null && !query.trim().isEmpty()) {
+				// Filter products by name using LIKE
+				sql = "SELECT product_id, product_name, price, product_image FROM product WHERE product_name LIKE ?";
+				ps = conn.prepareStatement(sql);
+				ps.setString(1, "%" + query + "%"); // Wildcard search
+			} else {
+				// Fetch all products
+				sql = "SELECT product_id, product_name, price, product_image FROM product";
+				ps = conn.prepareStatement(sql);
+			}
 
-			while (rs.next()) {
-				ProductModel p = new ProductModel(rs.getInt("product_id"), rs.getString("product_name"),
-						rs.getDouble("price"), rs.getString("product_image"));
-				products.add(p);
+			try (ResultSet rs = ps.executeQuery()) {
+				while (rs.next()) {
+					ProductModel p = new ProductModel(rs.getInt("product_id"), rs.getString("product_name"),
+							rs.getDouble("price"), rs.getString("product_image"));
+					products.add(p);
+				}
 			}
 		}
+
 		request.setAttribute("productList", products);
 		request.getRequestDispatcher("/WEB-INF/pages/product.jsp").forward(request, response);
 	}

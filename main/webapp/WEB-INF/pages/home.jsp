@@ -34,7 +34,6 @@
 			href="${pageContext.request.contextPath}/contact" class="cta-button">Contact
 			US</a>
 	</section>
-	<script src="${pageContext.request.contextPath}/js/home.js"></script>
 
 	<jsp:include page="footer.jsp" />
 </body>

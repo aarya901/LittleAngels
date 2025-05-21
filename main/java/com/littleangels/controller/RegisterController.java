@@ -189,8 +189,6 @@ public class RegisterController extends HttpServlet {
 		}
 
 		String imageDbPath = "uploads/" + imageFileName;
-		System.out.println(imageDbPath);
-
 		return new UserModel(0, firstName, lastName, username, password, phone, email, address, role, dob, imageDbPath,
 				gender);
 	}

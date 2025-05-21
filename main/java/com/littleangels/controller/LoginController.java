@@ -65,13 +65,21 @@ public class LoginController extends HttpServlet {
 			return;
 		}
 
-		// Proceed with login if fields are filled
 		UserModel userModel = new UserModel();
 		userModel.setUserName(username);
 		userModel.setPassword(password);
 
 		LoginService loginService = new LoginService();
-		UserModel loggedInUser = loginService.loginUser(userModel);
+		UserModel loggedInUser = null;
+
+		try {
+			loggedInUser = loginService.loginUser(userModel);
+		} catch (Exception e) {
+			e.printStackTrace();
+			request.setAttribute("error", "Database connection error. Please try again later.");
+			request.getRequestDispatcher("/WEB-INF/pages/login.jsp").forward(request, response);
+			return;
+		}
 
 		if (loggedInUser != null) {
 			String roleValue = loggedInUser.getRole();
@@ -92,9 +100,7 @@ public class LoginController extends HttpServlet {
 				SessionUtil.setAttribute(request, "customer", loggedInUser.getUserName());
 				response.sendRedirect(request.getContextPath() + "/home");
 			}
-
 		} else {
-			// Credentials are wrong
 			request.setAttribute("error", "Invalid username or password.");
 			request.getRequestDispatcher("/WEB-INF/pages/login.jsp").forward(request, response);
 		}

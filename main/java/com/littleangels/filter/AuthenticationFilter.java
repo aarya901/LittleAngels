@@ -29,7 +29,7 @@ public class AuthenticationFilter implements Filter {
 	private static final List<String> ADMIN_PAGES = Arrays.asList("/admin-product", "/admin-profile", "/adminn");
 
 	// Pages only accessible by logged-in customers
-	private static final List<String> USER_PAGES = Arrays.asList("/cart", "/my-order", "/user-profile", "/product",
+	private static final List<String> USER_PAGES = Arrays.asList("/cart", "/my-order", "/user-profile", "/product", "/search",
 			"/contact");
 
 	/**
