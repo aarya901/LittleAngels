@@ -1,101 +1,101 @@
 body {
-    font-family: Arial, sans-serif;
-    background: #fbf8f5;
-    margin: 0;
-    padding: 0;
+	font-family: Arial, sans-serif;
+	background: #fbf8f5;
+	margin: 0;
+	padding: 0;
 }
 
 .header {
-    background: #ffe9e3;
-    color: #324156;
-    padding: 1rem;
-    text-align: center;
-    font-size: 1.5rem;
+	background: #ffe9e3;
+	color: #324156;
+	padding: 1rem;
+	text-align: center;
+	font-size: 1.5rem;
 }
 
 .cart_table {
-    width: 95%;
-    max-width: 1100px;
-    margin: 2rem auto;
-    background: white;
-    border-radius: 8px;
-    padding: 1rem;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+	width: 95%;
+	max-width: 1100px;
+	margin: 2rem auto;
+	background: white;
+	border-radius: 8px;
+	padding: 1rem;
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 table {
-    width: 100%;
-    border-collapse: collapse;
-    text-align: center;
+	width: 100%;
+	border-collapse: collapse;
+	text-align: center;
 }
 
 thead {
-    background-color:#dda4b7;
-    color: white;
+	background-color: #dda4b7;
+	color: white;
 }
 
 th, td {
-    padding: 12px 10px;
-    border: 1px solid #ccc;
+	padding: 12px 10px;
+	border: 1px solid #ccc;
 }
 
 img {
-    width: 80px;
-    height: 80px;
-    object-fit: cover;
-    border-radius: 6px;
+	width: 80px;
+	height: 80px;
+	object-fit: cover;
+	border-radius: 6px;
 }
 
 input[type="number"] {
-    width: 50px;
-    padding: 5px;
+	width: 50px;
+	padding: 5px;
 }
 
 button {
-    padding: 5px 10px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+	padding: 5px 10px;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
 }
 
 .add {
-    background-color:#8997a7;
-    color: white;
+	background-color: #8997a7;
+	color: white;
 }
 
 .remove {
-    background-color: #8997a7;
-    color: white;
+	background-color: #8997a7;
+	color: white;
 }
 
 button:hover {
-    opacity: 0.9;
+	opacity: 0.9;
 }
 
 .total_Amount {
-    display: flex;
-    justify-content: space-between;
-    background-color:#dda4b7;
-    padding: 1rem;
-    font-weight: bold;
-    margin-top: 1rem;
+	display: flex;
+	justify-content: space-between;
+	background-color: #dda4b7;
+	padding: 1rem;
+	font-weight: bold;
+	margin-top: 1rem;
 }
 
 .cart_button {
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
-    margin-top: 1rem;
+	display: flex;
+	justify-content: flex-end;
+	gap: 1rem;
+	margin-top: 1rem;
 }
 
 .cancel {
-    background-color:  #8997a7;
-    color: white;
+	background-color: #8997a7;
+	color: white;
 }
 
 .paynow {
-    background-color: #8997a7;
-    color: white;
+	background-color: #8997a7;
+	color: white;
 }
 
 /*body {

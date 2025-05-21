@@ -1,65 +1,64 @@
 @charset "UTF-8";
+
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f2f2f2;
-    margin: 0;
-    padding: 0;
-  }
+	font-family: Arial, sans-serif;
+	background-color: #f2f2f2;
+	margin: 0;
+	padding: 0;
+}
 
-  .header {
-    background-color: rgb(241, 137, 206);
-    color: white;
-    text-align: center;
-    padding: 20px 0;
-  }
+.header {
+	background-color: rgb(241, 137, 206);
+	color: white;
+	text-align: center;
+	padding: 20px 0;
+}
 
+.container {
+	padding: 20px;
+}
 
-  .container {
-    padding: 20px;
-  }
+h2 {
+	color: rgb(43, 35, 78);
+	text-align: center;
+	margin-bottom: 20px;
+}
 
-  h2 {
-    color: rgb(43, 35, 78);
-    text-align: center;
-    margin-bottom: 20px;
-  }
+table {
+	width: 100%;
+	border-collapse: collapse;
+	background-color: white;
+}
 
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: white;
-  }
+th, td {
+	padding: 12px;
+	border: 1px solid #ddd;
+	text-align: center;
+}
 
-  th, td {
-    padding: 12px;
-    border: 1px solid #ddd;
-    text-align: center;
-  }
+img {
+	width: 50px;
+	height: 50px;
+	object-fit: cover;
+}
 
-  img {
-    width: 50px;
-    height: 50px;
-    object-fit: cover;
-  }
+.update-btn {
+	background-color: #d9d3d9;
+	border: none;
+	padding: 6px 12px;
+	color: rgb(0, 0, 0);
+	cursor: pointer;
+	margin-right: 5px;
+}
 
-  .update-btn {
-    background-color: #d9d3d9;
-    border: none;
-    padding: 6px 12px;
-    color: rgb(0, 0, 0);
-    cursor: pointer;
-    margin-right: 5px;
-  }
+.remove-btn {
+	background-color: #f4b9f7;
+	border: none;
+	padding: 6px 12px;
+	color: rgb(0, 0, 0);
+	cursor: pointer;
+}
 
-  .remove-btn {
-    background-color: #f4b9f7;
-    border: none;
-    padding: 6px 12px;
-    color: rgb(0, 0, 0);
-    cursor: pointer;
-  }
-
-  .update-btn:hover,
-  .remove-btn:hover {
-    opacity: 0.9;
-  }
+.update-btn:hover, .remove-btn:hover {
+	opacity: 0.9;
+}

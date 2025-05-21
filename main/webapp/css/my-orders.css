@@ -1,86 +1,85 @@
 body {
-  margin: 0;
-  padding: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background-color: #fdfaf7;
-  color: #4e342e;
+	margin: 0;
+	padding: 0;
+	font-family: 'Segoe UI', sans-serif;
+	background-color: #fdfaf7;
+	color: #4e342e;
 }
 
 .orders-container {
-  max-width: 900px;
-  margin: 50px auto;
-  padding: 20px;
-  background-color: #fffaf6;
-  border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+	max-width: 900px;
+	margin: 50px auto;
+	padding: 20px;
+	background-color: #fffaf6;
+	border-radius: 10px;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 .orders-container h2 {
-  margin-bottom: 20px;
-  color: #5d4037;
+	margin-bottom: 20px;
+	color: #5d4037;
 }
 
 .orders-table {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
 }
 
-.order-header,
-.order-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr auto;
-  padding: 12px 20px;
-  border-radius: 8px;
-  align-items: center;
+.order-header, .order-row {
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr 1fr auto;
+	padding: 12px 20px;
+	border-radius: 8px;
+	align-items: center;
 }
 
 .order-header {
-  background-color: #f1e7dc;
-  font-weight: bold;
-  color: #6d4c41;
+	background-color: #f1e7dc;
+	font-weight: bold;
+	color: #6d4c41;
 }
 
 .order-row {
-  background-color: #f9f4ef;
-  transition: background 0.3s ease;
+	background-color: #f9f4ef;
+	transition: background 0.3s ease;
 }
 
 .order-row:hover {
-  background-color: #f0e5dc;
+	background-color: #f0e5dc;
 }
 
 .status {
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-size: 0.9rem;
-  font-weight: 500;
+	padding: 4px 10px;
+	border-radius: 20px;
+	font-size: 0.9rem;
+	font-weight: 500;
 }
 
 .status.delivered {
-  background-color: #dcedc8;
-  color: #33691e;
+	background-color: #dcedc8;
+	color: #33691e;
 }
 
 .status.pending {
-  background-color: #ffe0b2;
-  color: #e65100;
+	background-color: #ffe0b2;
+	color: #e65100;
 }
 
 .status.shipped {
-  background-color: #b3e5fc;
-  color: #01579b;
+	background-color: #b3e5fc;
+	color: #01579b;
 }
 
 .view-btn {
-  padding: 6px 14px;
-  background-color: #d7ccc8;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.3s;
+	padding: 6px 14px;
+	background-color: #d7ccc8;
+	border: none;
+	border-radius: 6px;
+	cursor: pointer;
+	transition: background 0.3s;
 }
 
 .view-btn:hover {
-  background-color: #bcaaa4;
+	background-color: #bcaaa4;
 }

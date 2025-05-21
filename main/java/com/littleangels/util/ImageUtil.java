@@ -1,66 +1,95 @@
 package com.littleangels.util;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+
 import jakarta.servlet.http.Part;
 
+/**
+ * Utility class for handling image file uploads via HTTP multipart requests.
+ * Provides methods to extract the file name from the Part header, save the
+ * uploaded image to a predefined directory, and retrieve the save path.
+ * 
+ * @author Aarya Gautam
+ */
 public class ImageUtil {
 
-    public String getImageNameFromPart(Part part) {
-        // Retrieve the content-disposition header from the part
-        String contentDisp = part.getHeader("content-disposition");
+	/**
+	 * Absolute path on the server where uploaded images will be saved. Update this
+	 * path as needed for different deployment environments.
+	 */
+	private static final String SAVE_PATH = "C:/Users/NITRO/eclipse-workspace/Little Angels/src/main/webapp/uploads";
 
-        // Split the header by semicolons to isolate key-value pairs
-        String[] items = contentDisp.split(";");
+	/**
+	 * Extracts the submitted file name from the Part's Content-Disposition header.
+	 * Handles both Windows-style and Unix-style path separators.
+	 *
+	 * @param part The Part object representing the uploaded file.
+	 * @return The file name without path information, or "default.png" if none
+	 *         found.
+	 */
+	public String getImageNameFromPart(Part part) {
+		String contentDisp = part.getHeader("content-disposition");
+		String[] items = contentDisp.split(";");
+		String imageName = null;
 
-        // Initialize imageName variable to store the extracted file name
-        String imageName = null;
+		for (String s : items) {
+			if (s.trim().startsWith("filename")) {
+				// Remove the leading key and quotes
+				imageName = s.substring(s.indexOf('=') + 1).trim().replace("\"", "");
+				// Strip path information for Windows
+				imageName = imageName.substring(imageName.lastIndexOf('\\') + 1);
+				// Strip path information for Unix/Linux
+				imageName = imageName.substring(imageName.lastIndexOf('/') + 1);
+			}
+		}
 
-        // Iterate through the items to find the filename
-        for (String s : items) {
-            if (s.trim().startsWith("filename")) {
-                // Extract the file name from the header value
-                imageName = s.substring(s.indexOf("=") + 2, s.length() - 1);
-            }
-        }
+		// Fallback to default image if none provided
+		return (imageName == null || imageName.isEmpty()) ? "default.png" : imageName;
+	}
 
-        // Check if the filename was not found or is empty
-        if (imageName == null || imageName.isEmpty()) {
-            // Assign a default file name if none was provided
-            imageName = "download.png";
-        }
+	/**
+	 * Saves the uploaded image Part to the server file system under SAVE_PATH.
+	 * Creates the upload directory if it does not exist.
+	 *
+	 * @param part The Part object containing the image data.
+	 * @return true if the file was saved successfully; false otherwise.
+	 */
+	public boolean uploadImage(Part part) {
+		File uploadDir = new File(SAVE_PATH);
+		// Ensure the upload directory exists
+		if (!uploadDir.exists() && !uploadDir.mkdirs()) {
+			System.err.println("Could not create directory: " + SAVE_PATH);
+			return false;
+		}
 
-        // Return the extracted or default file name
-        return imageName;
-    }
+		String imageName = getImageNameFromPart(part);
+		File targetFile = new File(uploadDir, imageName);
 
-    public boolean uploadImage(Part part, String rootPath, String saveFolder) {
-        String savePath = getSavePath(rootPath, saveFolder);
-        File fileSaveDir = new File(savePath);
+		// Stream the uploaded file to disk
+		try (InputStream in = part.getInputStream(); FileOutputStream out = new FileOutputStream(targetFile)) {
 
-        // Ensure the directory exists
-        if (!fileSaveDir.exists()) {
-            if (!fileSaveDir.mkdirs()) {
-                return false; // Failed to create the directory
-            }
-        }
+			byte[] buffer = new byte[8192];
+			int len;
+			while ((len = in.read(buffer)) != -1) {
+				out.write(buffer, 0, len);
+			}
+			return true;
 
-        try {
-            // Get the image name
-            String imageName = getImageNameFromPart(part);
-            // Create the file path
-            String filePath = savePath + "/" + imageName;
-            // Write the file to the server
-            part.write(filePath);
-            return true; // Upload successful
-        } catch (IOException e) {
-            e.printStackTrace(); // Log the exception
-            return false; // Upload failed
-        }
-    }
+		} catch (IOException e) {
+			e.printStackTrace(); // Log any I/O errors
+			return false;
+		}
+	}
 
-    public String getSavePath(String rootPath, String saveFolder) {
-        // Construct the save path dynamically based on the web application root path
-        return rootPath + "/images" + saveFolder + "/";
-    }
+	/**
+	 * Returns the configured directory path where images are saved.
+	 *
+	 * @return The absolute save path as a String.
+	 */
+	public String getSavePath() {
+		return SAVE_PATH;
+	}
 }

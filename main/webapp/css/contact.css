@@ -1,0 +1,77 @@
+@charset "UTF-8";
+
+body {
+	font-family: 'Segoe UI', sans-serif;
+	margin: 0;
+	background: linear-gradient(to right, #fce4ec, #fff0f5);
+}
+
+.contact-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 60px 20px;
+	background: linear-gradient(to right, #fce4ec, #fff0f5);
+}
+
+.contact-card {
+	background: #ffffff;
+	border-radius: 16px;
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+	max-width: 600px;
+	width: 100%;
+	padding: 40px;
+	box-sizing: border-box;
+}
+
+.contact-card h2 {
+	margin-bottom: 10px;
+	font-size: 28px;
+	color: #333;
+}
+
+.contact-card p {
+	margin-bottom: 30px;
+	color: #555;
+}
+
+.form-group {
+	margin-bottom: 20px;
+}
+
+label {
+	display: block;
+	margin-bottom: 6px;
+	font-weight: 500;
+	color: #444;
+}
+
+input[type="text"], input[type="email"], textarea {
+	width: 100%;
+	padding: 12px;
+	border: 1px solid #ccc;
+	border-radius: 10px;
+	font-size: 16px;
+	resize: none;
+	transition: border-color 0.3s ease;
+}
+
+input:focus, textarea:focus {
+	outline: none;
+	border-color: #3f51b5;
+}
+
+.submit-btn {
+	background-color: #3f51b5;
+	color: white;
+	padding: 14px 24px;
+	border: none;
+	border-radius: 10px;
+	font-size: 16px;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+	background-color: #303f9f;
+}

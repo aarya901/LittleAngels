@@ -1,78 +1,116 @@
 package com.littleangels.filter;
 
-import jakarta.servlet.Filter;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.FilterConfig;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
+import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.*;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
+import com.littleangels.util.SessionUtil;
+import com.littleangels.util.CookieUtil;
+
+/**
+ * Filter to control access based on authentication and roles. Allows public
+ * access to certain pages, restricts admin pages to admin users, restricts user
+ * pages to logged-in customers, and redirects unauthorized access attempts.
+ * 
+ * Author: Priya Soni
+ */
 @WebFilter("/*")
 public class AuthenticationFilter implements Filter {
-	
-    @Override
-    public void init(FilterConfig filterConfig) throws ServletException {}
 
-    @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-            throws IOException, ServletException {
-        
-        HttpServletRequest req = (HttpServletRequest) request;
-        HttpServletResponse res = (HttpServletResponse) response;
-        HttpSession session = req.getSession(false);
-        String uri = req.getRequestURI();
+	// Pages accessible without login
+	private static final List<String> PUBLIC_PAGES = Arrays.asList("/home", "/about", "/login", "/register", "/footer",
+			"/header");
 
-        // Allow access to static resources
-        if (uri.endsWith(".css") || uri.endsWith(".js") || uri.endsWith(".jpg") || uri.endsWith(".png")) {
-            chain.doFilter(request, response);
-            return;
-        }
+	// Pages only accessible by admins
+	private static final List<String> ADMIN_PAGES = Arrays.asList("/admin-product", "/admin-profile", "/adminn");
 
-        // Allow public pages
-        if (uri.endsWith("/login") || uri.endsWith("/register") || uri.endsWith("/") || uri.contains("/public")) {
-            chain.doFilter(request, response);
-            return;
-        }
+	// Pages only accessible by logged-in customers
+	private static final List<String> USER_PAGES = Arrays.asList("/cart", "/my-order", "/user-profile", "/product",
+			"/contact");
 
-        // Get role from cookie
-        String role = null;
-        Cookie[] cookies = req.getCookies();
-        if (cookies != null) {
-            for (Cookie c : cookies) {
-                if ("role".equals(c.getName())) {
-                    role = c.getValue();
-                    break;
-                }
-            }
-        }
+	/**
+	 * Filters incoming requests to check authentication and authorization. Allows
+	 * access to static resources and public pages without login. Redirects to login
+	 * page if accessing restricted pages without proper role.
+	 *
+	 * @param req   ServletRequest
+	 * @param res   ServletResponse
+	 * @param chain FilterChain to pass request/response to next entity
+	 * @throws IOException      if IO errors occur
+	 * @throws ServletException if servlet errors occur
+	 */
+	@Override
+	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
+			throws IOException, ServletException {
 
-        // Admin access control
-        if (uri.contains("/admin-product") || uri.contains("/add-product")) {
-            if ("admin".equals(role)) {
-                chain.doFilter(request, response);
-            } else if ("user".equals(role)) {
-                res.sendRedirect(req.getContextPath() + "/home");
-            } else {
-                res.sendRedirect(req.getContextPath() + "/login");
-            }
-            return;
-        }
+		HttpServletRequest request = (HttpServletRequest) req;
+		HttpServletResponse response = (HttpServletResponse) res;
 
-        // All other pages allowed if logged in
-        if (session != null && session.getAttribute("username") != null) {
-            chain.doFilter(request, response);
-        } else {
-            res.sendRedirect(req.getContextPath() + "/login");
-        }
-    }
+		String uri = request.getRequestURI();
+		String contextPath = request.getContextPath();
+		String path = uri.substring(contextPath.length());
 
-    @Override
-    public void destroy() {}
+		boolean isLoggedIn = SessionUtil.getAttribute(request, "username") != null;
+
+		String role = null;
+		if (CookieUtil.getCookie(request, "role") != null) {
+			role = CookieUtil.getCookie(request, "role").getValue();
+			if (role != null) {
+				role = role.trim().toLowerCase();
+			}
+		}
+
+		// Allow static resources like css, js, images without filtering
+		if (path.matches(".*\\.(css|js|png|jpg|jpeg|gif|woff2?|ttf)$")) {
+			chain.doFilter(req, res);
+			return;
+		}
+
+		// Allow public pages without login
+		if (PUBLIC_PAGES.contains(path)) {
+			chain.doFilter(req, res);
+			return;
+		}
+
+		// Restrict admin pages to logged-in admins
+		if (ADMIN_PAGES.contains(path)) {
+			if (isLoggedIn && "admin".equals(role)) {
+				chain.doFilter(req, res);
+			} else {
+				response.sendRedirect(contextPath + "/login");
+			}
+			return;
+		}
+
+		// Restrict user pages to logged-in customers
+		if (USER_PAGES.contains(path)) {
+			if (isLoggedIn && "customer".equals(role)) {
+				chain.doFilter(req, res);
+			} else {
+				response.sendRedirect(contextPath + "/login");
+			}
+			return;
+		}
+
+		// Redirect unauthenticated users trying to access other pages to home
+		if (!isLoggedIn) {
+			response.sendRedirect(contextPath + "/home");
+		} else {
+			chain.doFilter(req, res);
+		}
+	}
+
+	@Override
+	public void init(FilterConfig filterConfig) {
+		// No initialization required
+	}
+
+	@Override
+	public void destroy() {
+		// No cleanup required
+	}
 }

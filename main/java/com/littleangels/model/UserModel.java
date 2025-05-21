@@ -2,125 +2,276 @@ package com.littleangels.model;
 
 import java.util.Date;
 
+/**
+ * Represents a user with personal, contact, and authentication details.
+ * 
+ * @author Aarya Gautam
+ */
 public class UserModel {
+	private int userId;
+	private String firstName;
+	private String lastName;
+	private String userName;
+	private String password;
+	private String phone;
+	private String email;
+	private String address;
+	private String role;
+	private Date dob;
+	private String imagePath;
+	private String gender;
 
-    private String firstName;
-    private String lastName;
-    private String userName;
-    private String password;
-    private String phone;
-    private String email;
-    private String address;
-    private String role;
-    private Date dob;
-    private String imagePath;
-    private String gender;  // New field for gender
+	/**
+	 * Default constructor.
+	 */
+	public UserModel() {
+	}
 
-    // Constructor
-    public UserModel(String firstName, String lastName, String userName, String password, String phone, 
-                     String email, String address, String role, Date dob, String imagePath, String gender) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.userName = userName;
-        this.password = password;
-        this.phone = phone;
-        this.email = email;
-        this.address = address;
-        this.role = role;
-        this.dob = dob;
-        this.imagePath = imagePath;
-        this.gender = gender;  // Set gender
-    }
+	/**
+	 * Parameterized constructor to initialize all fields.
+	 * 
+	 * @param userId    the user's ID
+	 * @param firstName the user's first name
+	 * @param lastName  the user's last name
+	 * @param userName  the user's username
+	 * @param password  the user's password
+	 * @param phone     the user's phone number
+	 * @param email     the user's email
+	 * @param address   the user's address
+	 * @param role      the user's role
+	 * @param dob       the user's date of birth
+	 * @param imagePath the user's profile image path
+	 * @param gender    the user's gender
+	 */
+	public UserModel(int userId, String firstName, String lastName, String userName, String password, String phone,
+			String email, String address, String role, Date dob, String imagePath, String gender) {
+		this.userId = userId;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.userName = userName;
+		this.password = password;
+		this.phone = phone;
+		this.email = email;
+		this.address = address;
+		this.role = role;
+		this.dob = dob;
+		this.imagePath = imagePath;
+		this.gender = gender;
+	}
 
-    public UserModel() {
-    }
+	/**
+	 * Gets the user ID.
+	 * 
+	 * @return userId
+	 */
+	public int getUserId() {
+		return userId;
+	}
 
-    // Getters and Setters
-    public String getFirstName() {
-        return firstName;
-    }
+	/**
+	 * Sets the user ID.
+	 * 
+	 * @param userId the userId to set
+	 */
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
+	/**
+	 * Gets the first name.
+	 * 
+	 * @return firstName
+	 */
+	public String getFirstName() {
+		return firstName;
+	}
 
-    public String getLastName() {
-        return lastName;
-    }
+	/**
+	 * Sets the first name.
+	 * 
+	 * @param firstName the firstName to set
+	 */
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
+	/**
+	 * Gets the last name.
+	 * 
+	 * @return lastName
+	 */
+	public String getLastName() {
+		return lastName;
+	}
 
-    public String getUserName() {
-        return userName;
-    }
+	/**
+	 * Sets the last name.
+	 * 
+	 * @param lastName the lastName to set
+	 */
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
 
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
+	/**
+	 * Gets the username.
+	 * 
+	 * @return userName
+	 */
+	public String getUserName() {
+		return userName;
+	}
 
-    public String getPassword() {
-        return password;
-    }
+	/**
+	 * Sets the username.
+	 * 
+	 * @param userName the userName to set
+	 */
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+	/**
+	 * Gets the password.
+	 * 
+	 * @return password
+	 */
+	public String getPassword() {
+		return password;
+	}
 
-    public String getPhone() {
-        return phone;
-    }
+	/**
+	 * Sets the password.
+	 * 
+	 * @param password the password to set
+	 */
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
+	/**
+	 * Gets the phone number.
+	 * 
+	 * @return phone
+	 */
+	public String getPhone() {
+		return phone;
+	}
 
-    public String getEmail() {
-        return email;
-    }
+	/**
+	 * Sets the phone number.
+	 * 
+	 * @param phone the phone to set
+	 */
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+	/**
+	 * Gets the email.
+	 * 
+	 * @return email
+	 */
+	public String getEmail() {
+		return email;
+	}
 
-    public String getAddress() {
-        return address;
-    }
+	/**
+	 * Sets the email.
+	 * 
+	 * @param email the email to set
+	 */
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
+	/**
+	 * Gets the address.
+	 * 
+	 * @return address
+	 */
+	public String getAddress() {
+		return address;
+	}
 
-    public String getRole() {
-        return role;
-    }
+	/**
+	 * Sets the address.
+	 * 
+	 * @param address the address to set
+	 */
+	public void setAddress(String address) {
+		this.address = address;
+	}
 
-    public void setRole(String role) {
-        this.role = role;
-    }
+	/**
+	 * Gets the role.
+	 * 
+	 * @return role
+	 */
+	public String getRole() {
+		return role;
+	}
 
-    public Date getDob() {
-        return dob;
-    }
+	/**
+	 * Sets the role.
+	 * 
+	 * @param role the role to set
+	 */
+	public void setRole(String role) {
+		this.role = role;
+	}
 
-    public void setDob(Date dob) {
-        this.dob = dob;
-    }
+	/**
+	 * Gets the date of birth.
+	 * 
+	 * @return dob
+	 */
+	public Date getDob() {
+		return dob;
+	}
 
-    public String getImagePath() {
-        return imagePath;
-    }
+	/**
+	 * Sets the date of birth.
+	 * 
+	 * @param dob the dob to set
+	 */
+	public void setDob(Date dob) {
+		this.dob = dob;
+	}
 
-    public void setImagePath(String imagePath) {
-        this.imagePath = imagePath;
-    }
+	/**
+	 * Gets the image path.
+	 * 
+	 * @return imagePath
+	 */
+	public String getImagePath() {
+		return imagePath;
+	}
 
-    public String getGender() {
-        return gender;  // Getter for gender
-    }
+	/**
+	 * Sets the image path.
+	 * 
+	 * @param imagePath the imagePath to set
+	 */
+	public void setImagePath(String imagePath) {
+		this.imagePath = imagePath;
+	}
 
-    public void setGender(String gender) {
-        this.gender = gender;  // Setter for gender
-    }
+	/**
+	 * Gets the gender.
+	 * 
+	 * @return gender
+	 */
+	public String getGender() {
+		return gender;
+	}
+
+	/**
+	 * Sets the gender.
+	 * 
+	 * @param gender the gender to set
+	 */
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
 }

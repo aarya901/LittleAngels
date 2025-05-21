@@ -13,54 +13,91 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
+/**
+ * Handles login page with successful redirection and validation
+ * 
+ * @author Rachina Gosai
+ */
+
 @WebServlet("/login")
 public class LoginController extends HttpServlet {
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        request.getRequestDispatcher("/WEB-INF/pages/login.jsp").forward(request, response);
-    }
+	/**
+	 * Handles GET requests by forwarding to login.jsp
+	 * 
+	 * @param request  HttpServletRequest
+	 * @param response HttpServletResponse
+	 * @throws ServletException on servlet errors
+	 * @throws IOException      on I/O errors
+	 */
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		request.getRequestDispatcher("/WEB-INF/pages/login.jsp").forward(request, response);
+	}
 
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+	/**
+	 * Handles POST requests for user login
+	 * 
+	 * @param request  HttpServletRequest
+	 * @param response HttpServletResponse
+	 * @throws ServletException on servlet errors
+	 * @throws IOException      on I/O errors
+	 */
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 
-        String username = request.getParameter("user_name");
-        String password = request.getParameter("user_password");
-        String role = request.getParameter("user_role");
+		String username = request.getParameter("user_name");
+		String password = request.getParameter("user_password");
 
-        // Create user model
-        UserModel userModel = new UserModel();
-        userModel.setUserName(username);
-        userModel.setPassword(password);
-        userModel.setRole(role);
+		// Check for blank inputs
+		if (username == null || username.trim().isEmpty()) {
+			request.setAttribute("error", "Username cannot be blank.");
+			request.getRequestDispatcher("/WEB-INF/pages/login.jsp").forward(request, response);
+			return;
+		}
 
-        // Call login service
-        LoginService loginService = new LoginService();
-        Boolean isValid = loginService.loginUser(userModel);
+		if (password == null || password.trim().isEmpty()) {
+			request.setAttribute("error", "Password cannot be blank.");
+			request.getRequestDispatcher("/WEB-INF/pages/login.jsp").forward(request, response);
+			return;
+		}
 
-        if (isValid != null && isValid) {
-            // Set session and cookie BEFORE forwarding/redirecting
-            SessionUtil.setAttribute(request, "username", username);
-            CookieUtil.addCookie(response, "role", role, 60 * 60); // 1 hour
+		// Proceed with login if fields are filled
+		UserModel userModel = new UserModel();
+		userModel.setUserName(username);
+		userModel.setPassword(password);
 
-            if ("admin".equalsIgnoreCase(role)) {
-                SessionUtil.setAttribute(request, "admin", username); // <-- Add this line
-                response.sendRedirect(request.getContextPath() + "/adminn");
-            } else if ("customer".equalsIgnoreCase(role)) {
-                response.sendRedirect(request.getContextPath() + "/home");
-            } else {
-                request.setAttribute("error", "Invalid role selection.");
-                request.getRequestDispatcher("/WEB-INF/pages/login.jsp").forward(request, response);
-            }
-        } else if (isValid == null) {
-            request.setAttribute("error", "Database connection error.");
-            request.getRequestDispatcher("/WEB-INF/pages/login.jsp").forward(request, response);
-        } else {
-            request.setAttribute("error", "Wrong username, role or password.");
-            request.getRequestDispatcher("/WEB-INF/pages/login.jsp").forward(request, response);
-        }
-    }
+		LoginService loginService = new LoginService();
+		UserModel loggedInUser = loginService.loginUser(userModel);
+
+		if (loggedInUser != null) {
+			String roleValue = loggedInUser.getRole();
+			if (roleValue == null) {
+				roleValue = "";
+			} else {
+				roleValue = roleValue.trim().toLowerCase();
+			}
+
+			CookieUtil.addCookie(response, "role", roleValue, 60 * 60);
+			request.getSession().setAttribute("userId", loggedInUser.getUserId());
+			SessionUtil.setAttribute(request, "username", loggedInUser.getUserName());
+
+			if ("admin".equalsIgnoreCase(roleValue)) {
+				SessionUtil.setAttribute(request, "admin", loggedInUser.getUserName());
+				response.sendRedirect(request.getContextPath() + "/adminn");
+			} else {
+				SessionUtil.setAttribute(request, "customer", loggedInUser.getUserName());
+				response.sendRedirect(request.getContextPath() + "/home");
+			}
+
+		} else {
+			// Credentials are wrong
+			request.setAttribute("error", "Invalid username or password.");
+			request.getRequestDispatcher("/WEB-INF/pages/login.jsp").forward(request, response);
+		}
+	}
+
 }

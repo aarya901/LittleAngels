@@ -1,11 +1,7 @@
 package com.littleangels.controller;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,202 +10,104 @@ import com.littleangels.model.ProductModel;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 
+/**
+ * Controller servlet for managing products in admin panel. Supports listing all
+ * products, deleting products, and redirecting to the product edit page.
+ * 
+ * Handles GET requests for listing products and redirecting to edit. Handles
+ * POST requests for deleting products.
+ * 
+ * @author Aarya Gautam
+ */
 @WebServlet("/admin-product")
 public class AdminProductController extends HttpServlet {
-    private static final long serialVersionUID = 1L;
 
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        String action = request.getParameter("action");
-        try {
-            if (action == null || action.equals("list")) {
-                listProducts(request, response);
-            } else if (action.equals("delete")) {
-                deleteProduct(request, response);
-            } else if (action.equals("edit")) {
-                showEditForm(request, response);
-            }
-        } catch (Exception e) {
-            throw new ServletException(e);
-        }
-    }
+	private static final long serialVersionUID = 1L;
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+	/**
+	 * Handles HTTP GET requests. If "action" parameter is "list" or null, lists all
+	 * products and forwards to admin-product.jsp. If "action" is "edit", redirects
+	 * to AddProductController for editing the specified product. Otherwise,
+	 * redirects to the default product list page.
+	 * 
+	 * @param req  HttpServletRequest containing parameters such as "action" and
+	 *             "product_id"
+	 * @param resp HttpServletResponse used for forwarding or redirecting
+	 * @throws ServletException if a servlet-specific error occurs
+	 * @throws IOException      if an I/O error occurs during request handling
+	 */
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String action = req.getParameter("action");
 
-        String action = request.getParameter("action");
-        try {
-            if ("add".equals(action)) {
-                insertProduct(request, response);
-            } else if ("update".equals(action)) {
-                updateProduct(request, response);
-            }
-        } catch (Exception e) {
-            throw new ServletException(e);
-        }
-    }
+		if (action == null || "list".equalsIgnoreCase(action)) {
+			// List all products
+			try (Connection conn = DbConfig.getDbConnection()) {
+				Statement stmt = conn.createStatement();
+				ResultSet rs = stmt.executeQuery("SELECT * FROM product");
+				List<ProductModel> products = new ArrayList<>();
+				while (rs.next()) {
+					products.add(new ProductModel(rs.getInt("product_id"), rs.getString("product_name"),
+							rs.getDouble("price"), rs.getString("product_image")));
+				}
+				req.setAttribute("products", products);
+				req.getRequestDispatcher("/WEB-INF/pages/admin-product.jsp").forward(req, resp);
+			} catch (Exception e) {
+				e.printStackTrace();
+				resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database error");
+			}
+		} else if ("edit".equalsIgnoreCase(action)) {
+			// Redirect to edit product page
+			String idStr = req.getParameter("product_id");
+			resp.sendRedirect(req.getContextPath() + "/add-product?product_id=" + idStr);
+		} else {
+			// Unknown action: redirect to product list
+			resp.sendRedirect(req.getContextPath() + "/admin-product");
+		}
+	}
 
-    private void listProducts(HttpServletRequest request, HttpServletResponse response)
-            throws Exception {
+	/**
+	 * Handles HTTP POST requests. Processes product deletion if "action" parameter
+	 * is "delete" and "product_id" is provided. Otherwise, delegates to doGet for
+	 * other actions.
+	 * 
+	 * @param req  HttpServletRequest containing parameters such as "action" and
+	 *             "product_id"
+	 * @param resp HttpServletResponse used for redirecting
+	 * @throws ServletException if a servlet-specific error occurs
+	 * @throws IOException      if an I/O error occurs during request handling
+	 */
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		System.out.println("Post run");
+		String action = req.getParameter("action");
 
-        List<ProductModel> list = new ArrayList<>();
-        String sql = "SELECT * FROM product";
-
-        try (Connection conn = DbConfig.getDbConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-
-            while (rs.next()) {
-                ProductModel p = new ProductModel(
-                        rs.getInt("product_id"),
-                        rs.getString("product_name"),
-                        rs.getDouble("price"),
-                        rs.getInt("category_id"),
-                        rs.getString("product_image")
-                );
-                list.add(p);
-            }
-        }
-
-        request.setAttribute("productList", list);
-        request.getRequestDispatcher("/WEB-INF/pages/admin-product.jsp").forward(request, response);
-    }
-
-    private void insertProduct(HttpServletRequest request, HttpServletResponse response)
-            throws Exception {
-
-        String name = request.getParameter("product_name");
-        double price = Double.parseDouble(request.getParameter("price"));
-        int categoryId = Integer.parseInt(request.getParameter("category_id"));
-        String image = request.getParameter("product_image");
-
-        String sql = "INSERT INTO product (product_name, price, category_id, product_image) VALUES (?, ?, ?, ?)";
-
-        try (Connection conn = DbConfig.getDbConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setString(1, name);
-            ps.setDouble(2, price);
-            ps.setInt(3, categoryId);
-            ps.setString(4, image);
-            ps.executeUpdate();
-        }
-
-        response.sendRedirect("products?action=list");
-    }
-
-    private void updateProduct(HttpServletRequest request, HttpServletResponse response)
-            throws Exception {
-
-        int id = Integer.parseInt(request.getParameter("product_id"));
-        String name = request.getParameter("product_name");
-        double price = Double.parseDouble(request.getParameter("price"));
-        int categoryId = Integer.parseInt(request.getParameter("category_id"));
-        String image = request.getParameter("product_image");
-
-        String sql = "UPDATE product SET product_name=?, price=?, category_id=?, product_image=? WHERE product_id=?";
-
-        try (Connection conn = DbConfig.getDbConnection()) {
-            // Step 1: Disable foreign key checks
-            disableForeignKeyChecks(conn);
-
-            // Step 2: Perform the update
-            try (PreparedStatement ps = conn.prepareStatement(sql)) {
-                ps.setString(1, name);
-                ps.setDouble(2, price);
-                ps.setInt(3, categoryId);
-                ps.setString(4, image);
-                ps.setInt(5, id);
-                ps.executeUpdate();
-            }
-
-            // Step 3: Re-enable foreign key checks
-            enableForeignKeyChecks(conn);
-        }
-
-        // Redirect back to the admin product page
-        response.sendRedirect("admin-product?action=list");
-    }
-
-    private void deleteProduct(HttpServletRequest request, HttpServletResponse response)
-            throws Exception {
-
-        int id = Integer.parseInt(request.getParameter("product_id"));
-        String sql = "DELETE FROM product WHERE product_id=?";
-
-        try (Connection conn = DbConfig.getDbConnection()) {
-            // Step 1: Disable foreign key checks
-            disableForeignKeyChecks(conn);
-
-            // Step 2: Perform the deletion
-            try (PreparedStatement ps = conn.prepareStatement(sql)) {
-                ps.setInt(1, id);
-                ps.executeUpdate();
-            }
-
-            // Step 3: Re-enable foreign key checks
-            enableForeignKeyChecks(conn);
-        }
-
-        // Redirect back to the admin product page
-        response.sendRedirect("admin-product?action=list");
-    }
-
-
-    private void showEditForm(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, ClassNotFoundException, SQLException {
-
-        int id = Integer.parseInt(request.getParameter("product_id"));
-        ProductModel existingProduct = null;
-
-        // Get the product by ID to display in the form
-        String sql = "SELECT * FROM product WHERE product_id=?";
-        try (Connection conn = DbConfig.getDbConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setInt(1, id);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    existingProduct = new ProductModel(
-                            rs.getInt("product_id"),
-                            rs.getString("product_name"),
-                            rs.getDouble("price"),
-                            rs.getInt("category_id"),
-                            rs.getString("product_image")
-                    );
-                }
-            }
-        }
-
-        if (existingProduct != null) {
-            request.setAttribute("product", existingProduct);
-            request.getRequestDispatcher("/WEB-INF/pages/add-product.jsp").forward(request, response);
-        } else {
-            response.sendRedirect("products?action=list");
-        }
-    }
-    private void disableForeignKeyChecks(Connection conn) throws SQLException {
-        String query = "SET FOREIGN_KEY_CHECKS = 0";
-        try (PreparedStatement ps = conn.prepareStatement(query)) {
-            ps.executeUpdate();
-        } catch (SQLException ex) {
-            System.err.println("Error disabling foreign key checks: " + ex.getMessage());
-        }
-    }
-
-    private void enableForeignKeyChecks(Connection conn) throws SQLException {
-        String query = "SET FOREIGN_KEY_CHECKS = 1";
-        try (PreparedStatement ps = conn.prepareStatement(query)) {
-            ps.executeUpdate();
-        } catch (SQLException ex) {
-            System.err.println("Error enabling foreign key checks: " + ex.getMessage());
-        }
-    }
-
+		if ("delete".equalsIgnoreCase(action)) {
+			String idStr = req.getParameter("product_id");
+			if (idStr != null && !idStr.isEmpty()) {
+				try (Connection conn = DbConfig.getDbConnection()) {
+					String sql = "DELETE FROM product WHERE product_id = ?";
+					PreparedStatement stmt = conn.prepareStatement(sql);
+					stmt.setInt(1, Integer.parseInt(idStr));
+					stmt.executeUpdate();
+				} catch (Exception e) {
+					e.printStackTrace();
+					resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error deleting product");
+					System.out.println(e);
+					return;
+				}
+			} else {
+				System.out.println(idStr);
+			}
+			// Redirect to product list after delete
+			resp.sendRedirect(req.getContextPath() + "/admin-product");
+		} else {
+			// Other POST actions fallback to GET handler
+			doGet(req, resp);
+		}
+	}
 }

@@ -1,0 +1,110 @@
+/* Base reset */
+body {
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	background-color: #f9e6e3; /* light nude pink */
+	margin: 0;
+	padding: 0;
+	color: #5a3e3e; /* muted brownish pink text */
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+/* Container for the main form */
+.container {
+	background-color: #fff;
+	max-width: 500px;
+	width: 90%;
+	margin: 30px auto 50px;
+	padding: 30px 25px;
+	border-radius: 12px;
+	box-shadow: 0 4px 12px rgba(150, 50, 50, 0.15);
+	box-sizing: border-box;
+}
+
+/* Title inside container */
+.container h2 {
+	margin-bottom: 25px;
+	font-size: 1.8rem;
+	font-weight: 700;
+	color: #6a4746;
+	text-align: center;
+}
+
+/* Form group spacing */
+.form-group {
+	margin-bottom: 20px;
+	display: flex;
+	flex-direction: column;
+}
+
+/* Label styling */
+.form-group label {
+	margin-bottom: 8px;
+	font-weight: 600;
+	font-size: 1rem;
+	color: #5a3e3e;
+}
+
+/* Input fields styling */
+.form-group input[type="text"], .form-group input[type="number"],
+	.form-group input[type="file"] {
+	padding: 10px 12px;
+	border: 2px solid #f4c6c3;
+	border-radius: 8px;
+	font-size: 1rem;
+	transition: border-color 0.3s;
+	outline: none;
+}
+
+/* Focus state for inputs */
+.form-group input[type="text"]:focus, .form-group input[type="number"]:focus,
+	.form-group input[type="file"]:focus {
+	border-color: #b36b68;
+	background-color: #fff0f0;
+}
+
+/* Current image preview */
+.form-group p {
+	margin-top: 10px;
+	font-size: 0.9rem;
+	color: #8b5c5b;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.form-group p img {
+	border-radius: 8px;
+	max-height: 80px;
+	object-fit: contain;
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+}
+
+/* Submit button */
+button[type="submit"] {
+	width: 100%;
+	background-color: #d88a87; /* dusty rose red */
+	border: none;
+	color: white;
+	font-weight: 700;
+	font-size: 1.2rem;
+	padding: 12px 0;
+	border-radius: 12px;
+	cursor: pointer;
+	transition: background-color 0.3s;
+	box-shadow: 0 3px 8px rgba(216, 138, 135, 0.7);
+}
+
+button[type="submit"]:hover {
+	background-color: #b36b68;
+}
+
+/* Responsive adjustments */
+@media ( max-width : 600px) {
+	.container {
+		width: 95%;
+		padding: 25px 15px;
+	}
+}

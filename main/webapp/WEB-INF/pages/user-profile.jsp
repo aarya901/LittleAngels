@@ -12,27 +12,14 @@
     <!-- Profile Card -->
     <div class="profile-card">
         <div class="profile-image">
-            <c:choose>
-                <c:when test="${not empty user.imagePath}">
-                    <img src="${user.imagePath}" alt="Profile Image">
-                </c:when>
-                <c:otherwise>
-                    <img src="${pageContext.request.contextPath}/images/avatar.png" alt="Default Avatar">
-                </c:otherwise>
-            </c:choose>
-        </div>
-        <div class="user-info">
-            <h2>${user.firstName} ${user.lastName}</h2>
-            <p class="email">${user.email}</p>
-            <p class="phone">${user.phone}</p>
+           <a href="${contextPath}"><img
+					src="${pageContext.request.contextPath}/${user.imagePath}"
+					alt="Logo"></a>
         </div>
     </div>
 	<div class= action-buttons>
-		<form action="changePassword.jsp" method="get">
-		    <button type="submit" class="btn">Change Password</button>
-		</form>
-		<form action="editData.jsp" method="get">
-		    <button type="submit" class="btn">Edit Details</button>
+		<form action="/edit_details" method="get">
+		    <a href="${pageContext.request.contextPath}/edit_details">Edit Details</a>
 		</form>
 	</div>
     <!-- Details Card -->
